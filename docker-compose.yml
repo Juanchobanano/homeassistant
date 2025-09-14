@@ -3,7 +3,7 @@ services:
     container_name: homeassistant
     image: ghcr.io/home-assistant/home-assistant:stable
     volumes:
-      - ./config:/config
+      - /home/juanchobanano/homeassistant:/config
       - /etc/localtime:/etc/localtime:ro
       - /run/dbus:/run/dbus:ro
     environment:
@@ -11,6 +11,7 @@ services:
     network_mode: host
     privileged: true
     restart: unless-stopped
+
 
   mosquitto:
     container_name: mosquitto
