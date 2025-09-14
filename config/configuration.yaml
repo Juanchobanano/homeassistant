@@ -1,0 +1,34 @@
+homeassistant:
+  name: Home
+  latitude: 4.6
+  longitude: -74.1
+  elevation: 2600
+  unit_system: metric
+  currency: COP
+  country: CO
+  time_zone: America/Bogota
+  external_url: "http://192.168.2.44:8123"
+  internal_url: "http://192.168.2.44:8123"
+  allowlist_external_dirs:
+    - "/tmp"
+
+# Enable MQTT
+mqtt:
+  broker: mosquitto
+  port: 1883
+  username: ''
+  password: ''
+  discovery: true
+  discovery_prefix: homeassistant
+
+# Example Zigbee2MQTT integration
+zigbee2mqtt:
+  mqtt:
+    base_topic: zigbee2mqtt
+    server: 'mqtt://mosquitto:1883'
+  homeassistant: true
+  permit_join: true
+
+# Example TTS to test speaker
+tts:
+  - platform: google_translate

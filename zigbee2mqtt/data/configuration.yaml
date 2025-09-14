@@ -1,0 +1,11 @@
+homeassistant: true
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://mosquitto:1883'
+  user: ''
+  password: ''
+serial:
+  port: /dev/ttyACM0  # Adjust for your Zigbee USB stick
+advanced:
+  log_level: info
