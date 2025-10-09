@@ -37,3 +37,15 @@ services:
       - PGID=1000
       - TZ=America/Bogota
     restart: unless-stopped
+
+  ewelink_smart_home:
+    container_name: ewelink_smart_home
+    image: ewelink_smart_home
+    network_mode: host
+    environment:
+      - HA_URL=http://localhost:8123
+      - SUPERVISOR_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxZDBhNTUwYTYyMzI0MjBlOGM3MWZkNTMxZmQyMmJjZSIsImlhdCI6MTc2MDA1MjI2MCwiZXhwIjoyMDc1NDEyMjYwfQ.mL7XRanC3dI2yC70pR_tdn4LWSdvvtedIrfLMDhww6Q  # Replace with your actual token
+      - TZ=America/Bogota
+    volumes:
+      - ./ewelink_data:/data
+    restart: unless-stopped
