@@ -40,7 +40,7 @@ services:
 
   ewelink_smart_home:
     container_name: ewelink_smart_home
-    image: ewelink_smart_home
+    image: ewelink/ewelink-smart-home
     network_mode: host
     environment:
       - HA_URL=http://localhost:8123
