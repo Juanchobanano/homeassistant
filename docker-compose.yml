@@ -24,6 +24,8 @@ services:
       - ./mosquitto/data:/mosquitto/data
       - ./mosquitto/log:/mosquitto/log
     restart: unless-stopped
+    networks:
+      - homeassistant
 
   code-server:
     container_name: code-server
