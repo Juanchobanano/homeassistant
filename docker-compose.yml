@@ -37,3 +37,20 @@ services:
       - PGID=1000
       - TZ=America/Bogota
     restart: unless-stopped
+
+  n8n:
+    container_name: n8n
+    image: n8nio/n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"   # Puerto donde n8n estará accesible
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true        # Activar autenticación básica
+      - N8N_BASIC_AUTH_USER=admin        # Usuario para login
+      - N8N_BASIC_AUTH_PASSWORD=supersecretpassword  # Contraseña para login
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - NODE_ENV=production
+    volumes:
+      - ./n8n:/home/node/.n8n   # Persistencia de datos de n8n
