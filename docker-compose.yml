@@ -52,5 +52,6 @@ services:
       - N8N_PORT=5678
       - N8N_PROTOCOL=http
       - NODE_ENV=production
+      - N8N_HOST=0.0.0.0
     volumes:
       - ./n8n:/home/node/.n8n   # Persistencia de datos de n8n
