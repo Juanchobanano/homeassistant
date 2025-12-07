@@ -40,7 +40,7 @@ services:
 
   n8n:
     container_name: n8n
-    image: n8nio/n8n
+    image: n8nio/n8n:next
     restart: unless-stopped
     ports:
       - "5678:5678"   # Puerto donde n8n estará accesible
