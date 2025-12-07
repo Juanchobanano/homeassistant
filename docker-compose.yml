@@ -53,6 +53,8 @@ services:
       - N8N_PROTOCOL=https
       - NODE_ENV=production
       - N8N_HOST=0.0.0.0
+
+      - N8N_SECURE_COOKIE=false
       
 
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
