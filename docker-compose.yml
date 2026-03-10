@@ -73,3 +73,18 @@ services:
       - N8N_SSO_LDAP_ENABLED=false
     volumes:
       - /home/juanchobanano/n8n:/home/node/.n8n
+
+  openclaw:
+    image: ghcr.io/openclaw/openclaw:latest
+    container_name: openclaw
+    restart: unless-stopped
+
+    ports:
+      - "18790:18790"
+
+    volumes:
+      - ./config:/config
+      - ./data:/data
+
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
