@@ -83,9 +83,9 @@ services:
       - "18789:18789"
       - "18791:18791"
 
+    environment:
+      - HOST=0.0.0.0
+
     volumes:
       - ./config:/config
       - ./data:/data
-
-    environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
