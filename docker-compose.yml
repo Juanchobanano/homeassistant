@@ -86,4 +86,4 @@ services:
       - OPENCLAW_GATEWAY_TRUSTED_PROXIES=["0.0.0.0/0"] # Treats LAN as local
       - GATEWAY_TOKEN=your_secure_token
     volumes:
-      - ~/.openclaw:/home/node/.openclaw
+      - /home/juanchobanano/openclaw:/home/node/.openclaw
