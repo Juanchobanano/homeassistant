@@ -82,9 +82,8 @@ services:
     ports:
       - "18789:18789"
     environment:
-      - ANTHROPIC_API_KEY=your_sk_key_here
-      - OPENCLAW_GATEWAY_BIND=lan
-      - OPENCLAW_GATEWAY_TRUSTED_PROXIES=["0.0.0.0/0"] # Treats LAN as local
-      - GATEWAY_TOKEN=your_secure_token
+      - ANTHROPIC_API_KEY=your_key_here
+      - OPENCLAW_GATEWAY_BIND=lan  # <== Add this line
+      - GATEWAY_TOKEN=super-secret-password # Set this now so you don't have to hunt for it
     volumes:
       - /home/juanchobanano/openclaw:/home/node/.openclaw
