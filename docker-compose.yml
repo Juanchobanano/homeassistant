@@ -80,7 +80,8 @@ services:
     restart: unless-stopped
 
     ports:
-      - "18790:18790"
+      - "18789:18789"
+      - "18791:18791"
 
     volumes:
       - ./config:/config
