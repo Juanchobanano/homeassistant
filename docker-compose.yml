@@ -75,17 +75,17 @@ services:
       - /home/juanchobanano/n8n:/home/node/.n8n
 
   openclaw:
-    image: ghcr.io/openclaw/openclaw:latest
-    container_name: openclaw
+    image: openclaw/gateway:latest
+    container_name: openclaw-gateway
     restart: unless-stopped
-
     ports:
       - "18789:18789"
-      - "18791:18791"
-
     environment:
-      - HOST=0.0.0.0
-
+      - ANTHROPIC_API_KEY=your_sk_key_here
+      - ANTHROPIC_MODEL=claude-3-5-sonnet-latest
+      - GATEWAY_TOKEN=create_a_strong_password_here
+      - NODE_ENV=production
     volumes:
-      - ./config:/config
-      - ./data:/data
+      - ./openclaw_data:/home/node/.openclaw
+      # If you want Claude to be able to edit files on this machine:
+      - /path/to/your/projects:/home/node/app/projects
