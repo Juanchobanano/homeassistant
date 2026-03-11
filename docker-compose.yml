@@ -76,7 +76,7 @@ services:
 
   openclaw:
     image: ghcr.io/openclaw/openclaw:latest
-    container_name: openclaw-gateway
+    container_name: openclaw
     user: "1000:1000"
     restart: unless-stopped
     ports:
