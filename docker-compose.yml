@@ -79,6 +79,7 @@ services:
     container_name: openclaw
     user: root
     restart: unless-stopped
+    command: ["node", "dist/index.js", "gateway", "--bind", "0.0.0.0", "--allow-unconfigured"]
     ports:
       - "18789:18789"
     environment:
