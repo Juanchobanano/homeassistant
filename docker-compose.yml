@@ -75,7 +75,7 @@ services:
       - /home/juanchobanano/n8n:/home/node/.n8n
 
   openclaw:
-    image: openclaw/gateway:latest
+    image: ghcr.io/openclaw/openclaw:latest
     container_name: openclaw-gateway
     restart: unless-stopped
     ports:
