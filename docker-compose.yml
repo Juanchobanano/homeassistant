@@ -86,4 +86,5 @@ services:
       - OPENCLAW_GATEWAY_BIND=lan  # <== Add this line
       - GATEWAY_TOKEN=super-secret-password # Set this now so you don't have to hunt for it
     volumes:
-      - /home/juanchobanano/openclaw:/home/node/.openclaw
+      - # /home/juanchobanano/openclaw:/home/node/.openclaw
+      - /home/juanchobanano/.openclaw:/root/.openclaw
