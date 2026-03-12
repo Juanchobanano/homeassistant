@@ -85,7 +85,7 @@ services:
       - "18791:18791"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - OPENCLAW_GATEWAY_TOKEN=your_secure_random_string_here
+      # - OPENCLAW_GATEWAY_TOKEN=your_secure_random_string_here
       - OPENCLAW_GATEWAY_CONTROLUI_DANGEROUSLY_ALLOW_HOST_HEADER_ORIGIN_FALLBACK=true
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
