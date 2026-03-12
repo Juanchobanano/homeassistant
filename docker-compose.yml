@@ -92,6 +92,7 @@ services:
       - "18789:18789"
       - "18791:18791"
     environment:
+      - ANTROPIC_API_KEY=${ANTROPIC_API_KEY}
       - OPENAI_API_KEY=${OPENAI_API_KEY}
       - GATEWAY_AUTH_TOKEN=super-secret-password
       - GATEWAY_CONTROLUI_DANGEROUSLYALLOWHOSTHEADERORIGINFALLBACK=true
