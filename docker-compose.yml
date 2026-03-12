@@ -84,8 +84,8 @@ services:
       - "18789:18789"
       - "18791:18791"
     environment:
-      - ANTHROPIC_API_KEY=your_key_here
-      - GATEWAY_TOKEN=super-secret-password
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENCLAW_GATEWAY_TOKEN=your_secure_random_string_here
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
 
