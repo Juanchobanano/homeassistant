@@ -74,7 +74,7 @@ services:
     volumes:
       - /home/juanchobanano/n8n:/home/node/.n8n
 
-    openclaw:
+  openclaw:
     image: ghcr.io/openclaw/openclaw:latest
     container_name: openclaw
     user: root
@@ -87,15 +87,16 @@ services:
         "--bind",
         "lan",
         "--allow-unconfigured",
-        "--gateway.controlUi.allowedOrigins",
-        "http://localhost:18789,http://192.168.2.44:18789"
+        "--gateway.auth.token",
+        "super-secret-password",
+        "--gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback",
+        "true"
       ]
     ports:
       - "18789:18789"
       - "18791:18791"
     environment:
       - OPENAI_API_KEY=${OPENAI_API_KEY}
-      - GATEWAY_TOKEN=super-secret-password
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
 
