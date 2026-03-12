@@ -74,12 +74,22 @@ services:
     volumes:
       - /home/juanchobanano/n8n:/home/node/.n8n
 
-  openclaw:
+    openclaw:
     image: ghcr.io/openclaw/openclaw:latest
     container_name: openclaw
     user: root
     restart: unless-stopped
-    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--allow-unconfigured"]
+    command:
+      [
+        "node",
+        "dist/index.js",
+        "gateway",
+        "--bind",
+        "lan",
+        "--allow-unconfigured",
+        "--gateway.controlUi.allowedOrigins",
+        "http://localhost:18789,http://192.168.2.44:18789"
+      ]
     ports:
       - "18789:18789"
       - "18791:18791"
@@ -89,4 +99,4 @@ services:
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
 
-    
+      
