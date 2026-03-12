@@ -79,13 +79,14 @@ services:
     container_name: openclaw
     user: root
     restart: unless-stopped
-    command: ["node", "dist/index.js", "gateway", "--bind", "0.0.0.0", "--allow-unconfigured"]
+    command: ["node", "dist/index.js", "gateway", "--bind", "lan", "--allow-unconfigured"]
     ports:
       - "18789:18789"
       - "18791:18791"
     environment:
       - ANTHROPIC_API_KEY=your_key_here
-      - OPENCLAW_GATEWAY_BIND=lan  # <== Add this line
-      - GATEWAY_TOKEN=super-secret-password # Set this now so you don't have to hunt for it
+      - GATEWAY_TOKEN=super-secret-password
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
+
+    
