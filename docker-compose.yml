@@ -87,8 +87,6 @@ services:
         "--bind",
         "lan",
         "--allow-unconfigured",
-        "--gateway.auth.token",
-        "super-secret-password",
         "--gateway.controlUi.dangerouslyAllowHostHeaderOriginFallback",
         "true"
       ]
