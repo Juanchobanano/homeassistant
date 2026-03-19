@@ -106,6 +106,16 @@ services:
     volumes:
       - ./mongo:/data/db
 
+  unifi-db:
+    image: mongo:4.4
+    container_name: unifi-db
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=unifi
+      - MONGO_INITDB_ROOT_PASSWORD=unifi123
+    volumes:
+      - /home/juanchobanano/.mongo:/data/db
+
   unifi:
     image: lscr.io/linuxserver/unifi-network-application:latest
     container_name: unifi
@@ -117,11 +127,16 @@ services:
       - PUID=1000
       - PGID=1000
       - TZ=America/Bogota
+
+      # 🔥 AQUÍ está la clave
+      - MONGO_USER=unifi
+      - MONGO_PASS=unifi123
       - MONGO_HOST=unifi-db
       - MONGO_PORT=27017
+      - MONGO_DBNAME=unifi
 
     volumes:
-      - ./config:/config
+      - /home/juanchobanano/.unifi:/config
 
     ports:
       - 9443:8443
