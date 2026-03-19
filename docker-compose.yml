@@ -107,11 +107,12 @@ services:
 
     environment:
       - TZ=America/Bogota
+      - UNIFI_UID=1000
+      - UNIFI_GID=1000
 
     volumes:
       - /home/juanchobanano/unifi:/unifi
 
-    user: "1000:1000"
 
     # Puertos usados (informativo, NO configurado por Docker):
     # 8443 -> Web UI
