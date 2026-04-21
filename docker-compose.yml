@@ -102,6 +102,7 @@ services:
   homeway:
     container_name: homeway
     image: homewayio/homeway
+    network_mode: host
     environment:
       - HOME_ASSISTANT_IP=localhost
       - HOME_ASSISTANT_ACCESS_TOKEN=${HOMEWAY_ACCESS_TOKEN}
