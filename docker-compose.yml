@@ -99,6 +99,16 @@ services:
     volumes:
       - /home/juanchobanano/.openclaw:/root/.openclaw
 
+  homeway:
+    container_name: homeway
+    image: homewayio/homeway
+    environment:
+      - HOME_ASSISTANT_IP=localhost
+      - HOME_ASSISTANT_ACCESS_TOKEN=${HOMEWAY_ACCESS_TOKEN}
+    volumes:
+      - /home/juanchobanano/homeway:/data
+    restart: unless-stopped
+
   unifi:
     image: jacobalberty/unifi:latest
     container_name: unifi
