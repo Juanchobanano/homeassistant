@@ -104,7 +104,7 @@ services:
     image: homewayio/homeway
     network_mode: host
     environment:
-      - HOME_ASSISTANT_IP=localhost
+      - HOME_ASSISTANT_IP=192.168.2.44
       - HOME_ASSISTANT_ACCESS_TOKEN=${HOMEWAY_ACCESS_TOKEN}
     volumes:
       - /home/juanchobanano/homeway:/data
