@@ -1,0 +1,37 @@
+services:
+  homeassistant:
+    container_name: homeassistant
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      - /home/juanchobanano/homeassistant:/config
+      - /etc/localtime:/etc/localtime:ro
+      - /run/dbus:/run/dbus:ro
+    environment:
+      - TZ=America/Bogota
+    network_mode: host
+    privileged: true
+    restart: unless-stopped
+
+  code-server:
+    container_name: code-server
+    image: linuxserver/code-server
+    volumes:
+      - /home/juanchobanano/homeassistant:/config
+    ports:
+      - "9444:8443"
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=America/Bogota
+    restart: unless-stopped
+
+  homeway:
+    container_name: homeway
+    image: homewayio/homeway
+    network_mode: host
+    environment:
+      - HOME_ASSISTANT_IP=192.168.2.44
+      - HOME_ASSISTANT_ACCESS_TOKEN=${HOMEWAY_ACCESS_TOKEN}
+    volumes:
+      - /home/juanchobanano/homeassistant/homeway:/data
+    restart: unless-stopped
