@@ -20,9 +20,9 @@ services:
   #     - "1883:1883"
   #     - "9001:9001"
   #   volumes:
-  #     - ./mosquitto/config:/mosquitto/config
-  #     - ./mosquitto/data:/mosquitto/data
-  #     - ./mosquitto/log:/mosquitto/log
+  #     - /home/juanchobanano/homeassistant/mosquitto/config:/mosquitto/config
+  #     - /home/juanchobanano/homeassistant/mosquitto/data:/mosquitto/data
+  #     - /home/juanchobanano/homeassistant/mosquitto/log:/mosquitto/log
   #   restart: unless-stopped
 
   code-server:
@@ -72,7 +72,7 @@ services:
       - N8N_SSO_OIDC_ENABLED=false  
       - N8N_SSO_LDAP_ENABLED=false
     volumes:
-      - /home/juanchobanano/n8n:/home/node/.n8n
+      - /home/juanchobanano/homeassistant/n8n:/home/node/.n8n
 
   openclaw:
     image: ghcr.io/openclaw/openclaw:latest
@@ -97,7 +97,7 @@ services:
       - GATEWAY_AUTH_TOKEN=super-secret-password
       - GATEWAY_CONTROLUI_DANGEROUSLYALLOWHOSTHEADERORIGINFALLBACK=true
     volumes:
-      - /home/juanchobanano/.openclaw:/root/.openclaw
+      - /home/juanchobanano/homeassistant/openclaw:/root/.openclaw
 
   homeway:
     container_name: homeway
@@ -107,7 +107,7 @@ services:
       - HOME_ASSISTANT_IP=192.168.2.44
       - HOME_ASSISTANT_ACCESS_TOKEN=${HOMEWAY_ACCESS_TOKEN}
     volumes:
-      - /home/juanchobanano/homeway:/data
+      - /home/juanchobanano/homeassistant/homeway:/data
     restart: unless-stopped
 
   unifi:
@@ -122,7 +122,7 @@ services:
       - UNIFI_GID=1000
 
     volumes:
-      - /home/juanchobanano/unifi:/unifi
+      - /home/juanchobanano/homeassistant/unifi:/unifi
 
 
     # Puertos usados (informativo, NO configurado por Docker):
@@ -130,3 +130,74 @@ services:
     # 8080 -> Device adoption
     # 3478/udp -> STUN
     # 10001/udp -> Discovery
+
+  # ── Monitoring stack ──────────────────────────────────────────
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=30d"
+      - "--web.enable-lifecycle"
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    privileged: true
+    pid: host
+    command:
+      - "--path.procfs=/host/proc"
+      - "--path.sysfs=/host/sys"
+      - "--path.rootfs=/rootfs"
+      - "--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc|run)($$|/)"
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor:latest
+    container_name: cadvisor
+    restart: unless-stopped
+    privileged: true
+    devices:
+      - /dev/kmsg
+    ports:
+      - "8082:8080"
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker/:/var/lib/docker:ro
+      - /dev/disk/:/dev/disk:ro
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    restart: unless-stopped
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_INSTALL_PLUGINS=
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+
+volumes:
+  prometheus_data:
+  grafana_data:
