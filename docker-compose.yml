@@ -42,20 +42,21 @@ services:
     container_name: n8n
     image: n8nio/n8n:next
     restart: unless-stopped
-    ports:
-      - "5678:5678"   # Puerto donde n8n estará accesible
+    networks:
+      - internal
     environment:
-      - N8N_BASIC_AUTH_ACTIVE=true        # Activar autenticación básica
-      - N8N_BASIC_AUTH_USER=admin        # Usuario para login
-      - N8N_BASIC_AUTH_PASSWORD=supersecretpassword  # Contraseña para login
-      - N8N_HOST=localhost
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=supersecretpassword
+      - N8N_HOST=0.0.0.0
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
       - NODE_ENV=production
-      - N8N_HOST=0.0.0.0
+      - N8N_SECURE_COOKIE=true
 
-      - N8N_SECURE_COOKIE=false
-      
+      # Public URL — replace YOUR_DOMAIN with your actual domain
+      - WEBHOOK_URL=https://n8n.YOUR_DOMAIN.com/
+      - N8N_EDITOR_BASE_URL=https://n8n.YOUR_DOMAIN.com/
 
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - DB_SQLITE_POOL_SIZE=5
@@ -63,16 +64,25 @@ services:
       - N8N_BLOCK_ENV_ACCESS_IN_NODE=false
       - N8N_GIT_NODE_DISABLE_BARE_REPOS=true
 
-      # - N8N_HOST=192.168.2.44
-      # - N8N_EDITOR_BASE_URL=http://192.168.2.44:5678
-      # - N8N_API_BASE_URL=http://192.168.2.44:5678
-      # - WEBHOOK_URL=http://192.168.2.44:5678/
-
       - N8N_SSO_SAML_ENABLED=false
-      - N8N_SSO_OIDC_ENABLED=false  
+      - N8N_SSO_OIDC_ENABLED=false
       - N8N_SSO_LDAP_ENABLED=false
     volumes:
       - /home/juanchobanano/homeassistant/n8n:/home/node/.n8n
+
+  # ── Cloudflare Tunnel ──────────────────────────────────────────
+
+  cloudflared:
+    container_name: cloudflared
+    image: cloudflare/cloudflared:latest
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${TUNNEL_TOKEN}
+    networks:
+      - internal
+
+  # ── LLM Gateway ────────────────────────────────────────────────
 
   openclaw:
     image: ghcr.io/openclaw/openclaw:latest
@@ -130,6 +140,96 @@ services:
     # 8080 -> Device adoption
     # 3478/udp -> STUN
     # 10001/udp -> Discovery
+
+  # ── Twenty CRM ─────────────────────────────────────────────────
+
+  twenty-db:
+    container_name: twenty-db
+    image: postgres:16
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=${PG_DATABASE_USER:-twenty}
+      - POSTGRES_PASSWORD=${PG_DATABASE_PASSWORD}
+      - POSTGRES_DB=${PG_DATABASE_NAME:-default}
+    volumes:
+      - twenty_db_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: pg_isready -U ${PG_DATABASE_USER:-twenty} -h localhost -d postgres
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  twenty-redis:
+    container_name: twenty-redis
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["--maxmemory-policy", "noeviction"]
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  twenty-server:
+    container_name: twenty-server
+    image: twentycrm/twenty:latest
+    restart: unless-stopped
+    ports:
+      - "3001:3000"
+    volumes:
+      - twenty_local_data:/app/packages/twenty-server/.local-storage
+    environment:
+      NODE_PORT: 3000
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-twenty}:${PG_DATABASE_PASSWORD}@twenty-db:5432/${PG_DATABASE_NAME:-default}
+      SERVER_URL: ${SERVER_URL:-http://localhost:3000}
+      REDIS_URL: redis://twenty-redis:6379
+      STORAGE_TYPE: local
+      APP_SECRET: ${TWENTY_APP_SECRET}
+      ENCRYPTION_KEY: ${TWENTY_ENCRYPTION_KEY}
+      FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
+      DISABLE_DB_MIGRATIONS: "false"
+      DISABLE_CRON_JOBS_REGISTRATION: "false"
+    depends_on:
+      twenty-db:
+        condition: service_healthy
+      twenty-redis:
+        condition: service_healthy
+    networks:
+      - internal
+    healthcheck:
+      test: curl --fail http://localhost:3000/healthz
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  twenty-worker:
+    container_name: twenty-worker
+    image: twentycrm/twenty:latest
+    restart: unless-stopped
+    command: ["yarn", "worker:prod"]
+    volumes:
+      - twenty_local_data:/app/packages/twenty-server/.local-storage
+    environment:
+      PG_DATABASE_URL: postgres://${PG_DATABASE_USER:-twenty}:${PG_DATABASE_PASSWORD}@twenty-db:5432/${PG_DATABASE_NAME:-default}
+      SERVER_URL: ${SERVER_URL:-http://localhost:3000}
+      REDIS_URL: redis://twenty-redis:6379
+      STORAGE_TYPE: local
+      APP_SECRET: ${TWENTY_APP_SECRET}
+      ENCRYPTION_KEY: ${TWENTY_ENCRYPTION_KEY}
+      FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
+      DISABLE_DB_MIGRATIONS: "true"
+      DISABLE_CRON_JOBS_REGISTRATION: "true"
+    depends_on:
+      twenty-db:
+        condition: service_healthy
+      twenty-server:
+        condition: service_healthy
+    networks:
+      - internal
 
   # ── Monitoring stack ──────────────────────────────────────────
 
@@ -201,3 +301,9 @@ services:
 volumes:
   prometheus_data:
   grafana_data:
+  twenty_db_data:
+  twenty_local_data:
+
+networks:
+  internal:
+    driver: bridge
