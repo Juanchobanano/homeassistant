@@ -12,18 +12,6 @@ services:
     privileged: true
     restart: unless-stopped
 
-  # mosquitto:
-  #   container_name: mosquitto
-  #   image: eclipse-mosquitto:2.0
-  #   network_mode: host
-  #   ports:
-  #     - "1883:1883"
-  #     - "9001:9001"
-  #   volumes:
-  #     - /home/juanchobanano/homeassistant/mosquitto/config:/mosquitto/config
-  #     - /home/juanchobanano/homeassistant/mosquitto/data:/mosquitto/data
-  #     - /home/juanchobanano/homeassistant/mosquitto/log:/mosquitto/log
-  #   restart: unless-stopped
 
   code-server:
     container_name: code-server
@@ -54,9 +42,9 @@ services:
       - NODE_ENV=production
       - N8N_SECURE_COOKIE=true
 
-      # Public URL — replace YOUR_DOMAIN with your actual domain
-      - WEBHOOK_URL=https://n8n.YOUR_DOMAIN.com/
-      - N8N_EDITOR_BASE_URL=https://n8n.YOUR_DOMAIN.com/
+      # Public URL
+      - WEBHOOK_URL=https://n8n.asistentedehogar.com/
+      - N8N_EDITOR_BASE_URL=https://n8n.asistentedehogar.com/
 
       - N8N_ENFORCE_SETTINGS_FILE_PERMISSIONS=true
       - DB_SQLITE_POOL_SIZE=5
