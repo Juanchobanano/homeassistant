@@ -226,7 +226,7 @@ services:
       EMAIL_SMTP_USER: juanesteban@propiedadsegura.ai
       EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
       EMAIL_FROM_ADDRESS: juanesteban@propiedadsegura.ai
-      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Asistente de Hogar}
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Propiedad Segura AI}
     depends_on:
       twenty-db:
         condition: service_healthy
