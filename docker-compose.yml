@@ -34,8 +34,8 @@ services:
       - internal
     environment:
       - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=admin
-      - N8N_BASIC_AUTH_PASSWORD=supersecretpassword
+      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER:-admin}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
       - N8N_HOST=0.0.0.0
       - N8N_PORT=5678
       - N8N_PROTOCOL=https
@@ -181,6 +181,9 @@ services:
       FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
       DISABLE_DB_MIGRATIONS: "false"
       DISABLE_CRON_JOBS_REGISTRATION: "false"
+      # Access control
+      SIGN_IN_PREFILLED: "false"
+      IS_WORKSPACE_CREATION_LIMITED_TO_SERVER_ADMINS: "true"
       # Email (SMTP via Google Workspace)
       EMAIL_DRIVER: smtp
       EMAIL_SMTP_HOST: smtp.gmail.com
@@ -219,6 +222,9 @@ services:
       FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
       DISABLE_DB_MIGRATIONS: "true"
       DISABLE_CRON_JOBS_REGISTRATION: "true"
+      # Access control
+      SIGN_IN_PREFILLED: "false"
+      IS_WORKSPACE_CREATION_LIMITED_TO_SERVER_ADMINS: "true"
       # Email (SMTP via Google Workspace)
       EMAIL_DRIVER: smtp
       EMAIL_SMTP_HOST: smtp.gmail.com
