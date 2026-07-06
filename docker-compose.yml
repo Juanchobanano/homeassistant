@@ -181,6 +181,14 @@ services:
       FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
       DISABLE_DB_MIGRATIONS: "false"
       DISABLE_CRON_JOBS_REGISTRATION: "false"
+      # Email (SMTP via Google Workspace)
+      EMAIL_DRIVER: smtp
+      EMAIL_SMTP_HOST: smtp.gmail.com
+      EMAIL_SMTP_PORT: 587
+      EMAIL_SMTP_USER: juanesteban@propiedadsegura.ai
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+      EMAIL_FROM_ADDRESS: juanesteban@propiedadsegura.ai
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Asistente de Hogar}
     depends_on:
       twenty-db:
         condition: service_healthy
@@ -189,7 +197,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: curl --fail http://localhost:3000/healthz
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/healthz',(r)=>{process.exit(r.statusCode===200?0:1)})"]
       interval: 5s
       timeout: 5s
       retries: 20
@@ -211,6 +219,14 @@ services:
       FALLBACK_ENCRYPTION_KEY: ${TWENTY_FALLBACK_ENCRYPTION_KEY}
       DISABLE_DB_MIGRATIONS: "true"
       DISABLE_CRON_JOBS_REGISTRATION: "true"
+      # Email (SMTP via Google Workspace)
+      EMAIL_DRIVER: smtp
+      EMAIL_SMTP_HOST: smtp.gmail.com
+      EMAIL_SMTP_PORT: 587
+      EMAIL_SMTP_USER: juanesteban@propiedadsegura.ai
+      EMAIL_SMTP_PASSWORD: ${EMAIL_SMTP_PASSWORD}
+      EMAIL_FROM_ADDRESS: juanesteban@propiedadsegura.ai
+      EMAIL_FROM_NAME: ${EMAIL_FROM_NAME:-Asistente de Hogar}
     depends_on:
       twenty-db:
         condition: service_healthy
