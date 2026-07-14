@@ -19,7 +19,7 @@ This is a home server configuration repository. It manages a stack of self-hoste
 | homeassistant | `ghcr.io/home-assistant/home-assistant:stable` | host network | TZ=America/Bogota |
 | code-server | `linuxserver/code-server` | 9444 | Web VS Code over the HA config dir |
 | n8n | `n8nio/n8n:next` | internal network | Workflow automation (WhatsApp bot, CRM sync). Accessed via Cloudflare Tunnel at `https://n8n.<domain>/` |
-| openclaw | `ghcr.io/openclaw/openclaw:latest` | 18789, 18791 | LLM gateway (needs `ANTROPIC_API_KEY`, `OPENAI_API_KEY` env vars) |
+| hermes | `nousresearch/hermes-agent:latest` | none (outbound via internal network) | AI agent gateway with Telegram bot. Free LLM via Nous Portal (`docker exec -it hermes hermes setup --portal`) |
 | cloudflared | `cloudflare/cloudflared:latest` | none (outbound tunnel) | Cloudflare Tunnel connector; exposes n8n securely to the internet |
 | twenty-server | `twentycrm/twenty:latest` | 3001 | Twenty CRM server (API + UI). Also: `twenty-worker`, `twenty-db` (pg16), `twenty-redis` |
 | unifi | `jacobalberty/unifi:latest` | host network | Network controller; data at `/home/juanchobanano/unifi` |
@@ -32,8 +32,10 @@ Changes are deployed by copying files to the server and running Docker Compose t
 ## Environment variables
 
 The root `docker-compose.yml` references these env vars (must be set on the server):
-- `ANTROPIC_API_KEY` — for openclaw
-- `OPENAI_API_KEY` — for openclaw
+- `ANTROPIC_API_KEY` — for hermes (Anthropic Claude models)
+- `OPENAI_API_KEY` — for hermes (OpenAI models)
+- `TELEGRAM_BOT_TOKEN` — Hermes Telegram bot token (from @BotFather)
+- `TELEGRAM_ALLOWED_USERS` — comma-separated Telegram user IDs allowed to chat with Hermes
 - `TUNNEL_TOKEN` — Cloudflare Tunnel token (from Cloudflare Zero Trust dashboard)
 - `PG_DATABASE_USER` — Twenty CRM DB user (default: `twenty`)
 - `PG_DATABASE_PASSWORD` — Twenty CRM DB password
