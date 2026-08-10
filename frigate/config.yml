@@ -126,9 +126,6 @@ cameras:
       fps: 5
     record:
       enabled: true
-      retain:
-        days: 7
-        mode: motion
     snapshots:
       enabled: true
     objects:
