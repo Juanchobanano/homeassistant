@@ -57,10 +57,10 @@ snapshots:
     default: 30
 
 # ── FFmpeg defaults ────────────────────────────────────────────────
-
-ffmpeg:
-  # Remove or change this if you add a hardware detector above.
-  # hwaccel_args: preset-vaapi
+#
+# Add hwaccel_args once you have a hardware detector configured, e.g.:
+# ffmpeg:
+#   hwaccel_args: preset-vaapi
 
 # ── UI ─────────────────────────────────────────────────────────────
 
