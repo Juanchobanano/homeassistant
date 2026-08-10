@@ -27,9 +27,7 @@ detectors:
   #   device: pci
 
   # Intel iGPU (VAAPI) — uncomment if your server has an Intel CPU:
-  #   and add the following ffmpeg preset under the camera:
-  #   hwaccel_args: preset-vaapi
-  #
+  #   (also uncomment ffmpeg: hwaccel_args below)
   # openvino:
   #   type: openvino
   #   device: GPU
@@ -39,24 +37,31 @@ detectors:
 database:
   path: /config/frigate.db
 
-# ── Recording & Snapshots ──────────────────────────────────────────
+# ── Recording ──────────────────────────────────────────────────────
 
 record:
   enabled: true
-  retain:
+  continuous:
+    days: 0
+  motion:
     days: 7
-    mode: motion
-  events:
+  alerts:
     retain:
-      default: 30
+      days: 30
       mode: motion
+  detections:
+    retain:
+      days: 30
+      mode: motion
+
+# ── Snapshots ──────────────────────────────────────────────────────
 
 snapshots:
   enabled: true
   retain:
     default: 30
 
-# ── FFmpeg defaults ────────────────────────────────────────────────
+# ── FFmpeg ─────────────────────────────────────────────────────────
 #
 # Add hwaccel_args once you have a hardware detector configured, e.g.:
 # ffmpeg:
@@ -65,7 +70,10 @@ snapshots:
 # ── UI ─────────────────────────────────────────────────────────────
 
 ui:
-  live_mode: webrtc
+  time_format: 24hour
+  date_style: short
+  time_style: medium
+  unit_system: metric
 
 # ── Cameras ────────────────────────────────────────────────────────
 #
