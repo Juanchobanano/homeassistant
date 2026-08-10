@@ -110,4 +110,30 @@ ui:
 #         - cat
 #         - dog
 
-cameras: {}
+cameras:
+  tapo_c200:
+    ffmpeg:
+      inputs:
+        - path: rtsp://tapoc200:YAr34Er5pCnO@192.168.2.42:554/stream2
+          roles:
+            - detect
+        - path: rtsp://tapoc200:YAr34Er5pCnO@192.168.2.42:554/stream1
+          roles:
+            - record
+    detect:
+      width: 640
+      height: 360
+      fps: 5
+    record:
+      enabled: true
+      retain:
+        days: 7
+        mode: motion
+    snapshots:
+      enabled: true
+    objects:
+      track:
+        - person
+        - car
+        - cat
+        - dog
