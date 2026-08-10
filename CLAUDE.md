@@ -23,7 +23,11 @@ This is a home server configuration repository. It manages a stack of self-hoste
 | cloudflared | `cloudflare/cloudflared:latest` | none (outbound tunnel) | Cloudflare Tunnel connector; exposes n8n securely to the internet |
 | twenty-server | `twentycrm/twenty:latest` | 3001 | Twenty CRM server (API + UI). Also: `twenty-worker`, `twenty-db` (pg16), `twenty-redis` |
 | unifi | `jacobalberty/unifi:latest` | host network | Network controller; data at `/home/juanchobanano/unifi` |
-| mosquitto | `eclipse-mosquitto:2.0` | 1883, 9001 | MQTT broker (commented out in root compose, active in `config/`) |
+| mosquitto | `eclipse-mosquitto:2.0` | 1883, 9001 | MQTT broker for Frigate ↔ Home Assistant communication |
+| frigate | `ghcr.io/blakeblackshear/frigate:stable` | 5000, 8971, 8554–8555 | NVR with object detection. Config at `frigate/config.yml`, storage at `/home/juanchobanano/homeassistant/frigate/storage` |
+| homeway | `homewayio/homeway` | host network | Remote Home Assistant access |
+| prometheus | `prom/prometheus:latest` | 9090 | Metrics collection (30d retention) |
+| grafana | `grafana/grafana:latest` | 3000 | Metrics dashboards |
 
 ## Deployment
 

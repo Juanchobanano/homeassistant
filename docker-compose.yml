@@ -304,6 +304,49 @@ services:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning:ro
 
+  # ── Mosquitto MQTT Broker ────────────────────────────────────
+
+  mosquitto:
+    image: eclipse-mosquitto:2.0
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto/config/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./mosquitto/data:/mosquitto/data
+      - ./mosquitto/log:/mosquitto/log
+    networks:
+      - internal
+
+  # ── Frigate NVR ──────────────────────────────────────────────
+
+  frigate:
+    image: ghcr.io/blakeblackshear/frigate:stable
+    container_name: frigate
+    restart: unless-stopped
+    privileged: true
+    shm_size: "768mb"
+    environment:
+      - TZ=America/Bogota
+    ports:
+      - "5000:5000"       # HTTP web UI
+      - "8971:8971"       # HTTPS web UI
+      - "8554:8554"       # RTSP output
+      - "8555:8555/tcp"   # WebRTC
+      - "8555:8555/udp"   # WebRTC
+    volumes:
+      - ./frigate/config.yml:/config/config.yml:ro
+      - /home/juanchobanano/homeassistant/frigate/storage:/media/frigate
+      - /etc/localtime:/etc/localtime:ro
+      - type: tmpfs
+        target: /tmp/cache
+        tmpfs:
+          size: 1g
+    networks:
+      - internal
+
 volumes:
   prometheus_data:
   grafana_data:
